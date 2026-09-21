@@ -28,10 +28,11 @@ class ProductivityTimer:
 		notebook = ttk.Notebook(root)
 		notebook.pack(fill="both", expand=True)
 		timer_tab = tk.Frame(notebook, bg="#f6efe6")
-		history_tab = tk.Frame(notebook)
+		history_tab = tk.Frame(notebook, bg="#eadfcf")
 		notebook.add(timer_tab, text="Timers")
 		notebook.add(history_tab, text="History")
 		self.create_dorm_background(timer_tab)
+		self.create_bookshelf_background(history_tab)
 
 		tk.Label(
 			timer_tab,
@@ -155,8 +156,6 @@ class ProductivityTimer:
 		background.create_rectangle(70, 85, 350, 330, fill="#d6e9ec", outline="#8bb1b7", width=8)
 		background.create_line(210, 90, 210, 325, fill="#8bb1b7", width=6)
 		background.create_line(75, 205, 345, 205, fill="#8bb1b7", width=6)
-		background.create_oval(105, 120, 145, 160, fill="#fff3b0", outline="")
-		background.create_oval(270, 120, 310, 160, fill="#fff3b0", outline="")
 
 		background.create_rectangle(830, 170, 1260, 560, fill="#a98472", outline="#795f57", width=8)
 		background.create_rectangle(870, 215, 1220, 540, fill="#dbe8ec", outline="")
@@ -182,6 +181,55 @@ class ProductivityTimer:
 		background.create_oval(1135, 415, 1190, 465, fill="#8caf82", outline="#648061", width=3)
 		background.create_oval(1215, 395, 1270, 450, fill="#8caf82", outline="#648061", width=3)
 		background.create_oval(1165, 455, 1220, 505, fill="#8caf82", outline="#648061", width=3)
+
+	def create_bookshelf_background(self, parent):
+		background = tk.Canvas(
+			parent, bg="#eadfcf", highlightthickness=0, bd=0
+		)
+		background.place(relx=0, rely=0, relwidth=1, relheight=1)
+
+		background.create_rectangle(0, 0, 1400, 900, fill="#eadfcf", outline="")
+		background.create_rectangle(35, 30, 1365, 865, fill="#704936", outline="#4f3328", width=12)
+		background.create_rectangle(75, 70, 1325, 825, fill="#9a6b4d", outline="#5e3d2e", width=6)
+		background.create_rectangle(95, 95, 1305, 800, fill="#c28b62", outline="")
+
+		for shelf_y in (245, 405, 565, 725):
+			background.create_rectangle(
+				80, shelf_y, 1320, shelf_y + 22,
+				fill="#6b432f", outline="#4f3328", width=4
+			)
+			background.create_line(95, shelf_y - 5, 1305, shelf_y - 5, fill="#d5a176", width=4)
+
+		book_colors = ("#7d3f3f", "#3f6170", "#c18a45", "#526b4d", "#6e4d72", "#bd6650")
+		book_sets = (
+			(125, 205, 34, 112),
+			(285, 365, 38, 104),
+			(450, 520, 35, 116),
+			(610, 690, 40, 108),
+			(775, 875, 36, 113),
+			(965, 1050, 34, 107),
+			(1135, 1245, 39, 114),
+		)
+		for shelf_index, shelf_y in enumerate((245, 405, 565, 725)):
+			for book_index, (book_x, book_end, book_width, book_height) in enumerate(book_sets):
+				color = book_colors[(shelf_index + book_index) % len(book_colors)]
+				background.create_rectangle(
+					book_x,
+					shelf_y - book_height,
+					book_end,
+					shelf_y - 3,
+					fill=color,
+					outline="#55382e",
+					width=2,
+				)
+				background.create_line(
+					book_x + book_width // 2,
+					shelf_y - book_height + 8,
+					book_x + book_width // 2,
+					shelf_y - 10,
+					fill="#e6c39b",
+					width=2,
+				)
 	def update_display(self):
 		minutes, seconds = divmod(self.remaining_seconds, 60)
 		self.display.set(f"{minutes:02d}:{seconds:02d}")
