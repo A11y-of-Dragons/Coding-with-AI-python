@@ -41,11 +41,6 @@ class ProductivityTimer:
 			font=("Arial", 16, "bold"),
 			pady=12,
 		).pack()
-		self.background_button = tk.Button(
-			timer_tab, text="Night Scene", command=self.toggle_background
-		)
-		self.background_button.pack(pady=(0, 4))
-
 		tk.Label(
 			timer_tab,
 			textvariable=self.display,
@@ -170,7 +165,12 @@ class ProductivityTimer:
 		background.create_rectangle(830, 170, 1260, 560, fill="#a98472", outline="#795f57", width=8)
 		background.create_rectangle(870, 215, 1220, 540, fill="#dbe8ec", outline="")
 		background.create_rectangle(870, 215, 1220, 325, fill="#c4dce1", outline="")
-		background.create_oval(885, 235, 935, 285, fill="#fff3b0", outline="")
+		background.create_oval(
+			885, 235, 935, 285, fill="#fff3b0", outline="", tags="scene_toggle"
+		)
+		background.tag_bind("scene_toggle", "<Button-1>", lambda event: self.toggle_background())
+		background.tag_bind("scene_toggle", "<Enter>", lambda event: background.configure(cursor="hand2"))
+		background.tag_bind("scene_toggle", "<Leave>", lambda event: background.configure(cursor=""))
 		background.create_line(870, 325, 1220, 325, fill="#b7ced2", width=4)
 
 		background.create_rectangle(500, 420, 790, 585, fill="#c98f83", outline="#9e6b65", width=6)
@@ -197,10 +197,8 @@ class ProductivityTimer:
 		self.dorm_background.delete("all")
 		if self.night_scene:
 			self.draw_night_dorm()
-			self.background_button.config(text="Day Scene")
 		else:
 			self.create_dorm_background(self.dorm_background.master)
-			self.background_button.config(text="Night Scene")
 
 	def draw_night_dorm(self):
 		background = self.dorm_background
@@ -218,6 +216,12 @@ class ProductivityTimer:
 		background.create_rectangle(830, 170, 1260, 560, fill="#59434b", outline="#392d39", width=8)
 		background.create_rectangle(870, 215, 1220, 540, fill="#44384a", outline="")
 		background.create_rectangle(870, 215, 1220, 325, fill="#263653", outline="")
+		background.create_oval(
+			885, 235, 935, 285, fill="#f5e4a6", outline="", tags="scene_toggle"
+		)
+		background.tag_bind("scene_toggle", "<Button-1>", lambda event: self.toggle_background())
+		background.tag_bind("scene_toggle", "<Enter>", lambda event: background.configure(cursor="hand2"))
+		background.tag_bind("scene_toggle", "<Leave>", lambda event: background.configure(cursor=""))
 		background.create_line(870, 325, 1220, 325, fill="#635064", width=4)
 		background.create_rectangle(500, 420, 790, 585, fill="#75495a", outline="#4c3545", width=6)
 		background.create_rectangle(465, 365, 790, 470, fill="#a36c78", outline="#4c3545", width=6)
