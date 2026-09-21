@@ -147,9 +147,7 @@ class ProductivityTimer:
 			parent, bg="#f6efe6", highlightthickness=0, bd=0
 		)
 		background.place(relx=0, rely=0, relwidth=1, relheight=1)
-		background.lower()
 
-		# Soft cartoon dorm scene: wall, floor, window, bed, desk, and plant.
 		background.create_rectangle(0, 0, 1400, 620, fill="#f6efe6", outline="")
 		background.create_rectangle(0, 620, 1400, 900, fill="#d9c3ae", outline="")
 		background.create_line(0, 620, 1400, 620, fill="#c8ac96", width=5)
@@ -184,7 +182,6 @@ class ProductivityTimer:
 		background.create_oval(1135, 415, 1190, 465, fill="#8caf82", outline="#648061", width=3)
 		background.create_oval(1215, 395, 1270, 450, fill="#8caf82", outline="#648061", width=3)
 		background.create_oval(1165, 455, 1220, 505, fill="#8caf82", outline="#648061", width=3)
-
 	def update_display(self):
 		minutes, seconds = divmod(self.remaining_seconds, 60)
 		self.display.set(f"{minutes:02d}:{seconds:02d}")
