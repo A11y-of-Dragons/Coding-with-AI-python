@@ -149,11 +149,15 @@ class ProductivityTimer:
 		self.update_break_display()
 
 	def create_dorm_background(self, parent):
-		background = tk.Canvas(
-			parent, bg="#f6efe6", highlightthickness=0, bd=0
-		)
-		self.dorm_background = background
-		background.place(relx=0, rely=0, relwidth=1, relheight=1)
+		if hasattr(self, "dorm_background"):
+			background = self.dorm_background
+			background.delete("all")
+		else:
+			background = tk.Canvas(
+				parent, bg="#f6efe6", highlightthickness=0, bd=0
+			)
+			self.dorm_background = background
+			background.place(relx=0, rely=0, relwidth=1, relheight=1)
 
 		background.create_rectangle(0, 0, 1400, 620, fill="#f6efe6", outline="")
 		background.create_rectangle(0, 620, 1400, 900, fill="#d9c3ae", outline="")
@@ -195,41 +199,8 @@ class ProductivityTimer:
 			self.draw_night_dorm()
 			self.background_button.config(text="Day Scene")
 		else:
-			self.draw_day_dorm()
+			self.create_dorm_background(self.dorm_background.master)
 			self.background_button.config(text="Night Scene")
-
-	def draw_day_dorm(self):
-		background = self.dorm_background
-		background.configure(bg="#f6efe6")
-		background.create_rectangle(0, 0, 1400, 620, fill="#f6efe6", outline="")
-		background.create_rectangle(0, 620, 1400, 900, fill="#d9c3ae", outline="")
-		background.create_line(0, 620, 1400, 620, fill="#c8ac96", width=5)
-		background.create_rectangle(70, 85, 350, 330, fill="#d6e9ec", outline="#8bb1b7", width=8)
-		background.create_line(210, 90, 210, 325, fill="#8bb1b7", width=6)
-		background.create_line(75, 205, 345, 205, fill="#8bb1b7", width=6)
-		background.create_oval(105, 120, 145, 160, fill="#fff3b0", outline="")
-		background.create_oval(270, 120, 310, 160, fill="#fff3b0", outline="")
-		background.create_rectangle(830, 170, 1260, 560, fill="#a98472", outline="#795f57", width=8)
-		background.create_rectangle(870, 215, 1220, 540, fill="#dbe8ec", outline="")
-		background.create_rectangle(870, 215, 1220, 325, fill="#c4dce1", outline="")
-		background.create_oval(885, 235, 935, 285, fill="#fff3b0", outline="")
-		background.create_line(870, 325, 1220, 325, fill="#b7ced2", width=4)
-		background.create_rectangle(500, 420, 790, 585, fill="#c98f83", outline="#9e6b65", width=6)
-		background.create_rectangle(465, 365, 790, 470, fill="#e7b1a5", outline="#9e6b65", width=6)
-		background.create_rectangle(490, 385, 620, 455, fill="#f7d8c8", outline="")
-		background.create_rectangle(720, 365, 790, 585, fill="#8c6c62", outline="#70534e", width=5)
-		background.create_oval(735, 390, 775, 430, fill="#f0c6a8", outline="")
-		background.create_rectangle(80, 485, 390, 535, fill="#b87d5c", outline="#855a49", width=5)
-		background.create_rectangle(105, 535, 135, 625, fill="#855a49", outline="")
-		background.create_rectangle(335, 535, 365, 625, fill="#855a49", outline="")
-		background.create_rectangle(165, 440, 305, 485, fill="#f0d49b", outline="#a67d56", width=4)
-		background.create_rectangle(200, 390, 270, 440, fill="#f7e7bf", outline="#a67d56", width=4)
-		background.create_rectangle(1170, 510, 1250, 555, fill="#e7a58e", outline="#a66e67", width=4)
-		background.create_line(1190, 510, 1165, 440, fill="#6f916e", width=10)
-		background.create_line(1210, 510, 1240, 420, fill="#6f916e", width=10)
-		background.create_oval(1135, 415, 1190, 465, fill="#8caf82", outline="#648061", width=3)
-		background.create_oval(1215, 395, 1270, 450, fill="#8caf82", outline="#648061", width=3)
-		background.create_oval(1165, 455, 1220, 505, fill="#8caf82", outline="#648061", width=3)
 
 	def draw_night_dorm(self):
 		background = self.dorm_background
@@ -247,13 +218,11 @@ class ProductivityTimer:
 		background.create_rectangle(830, 170, 1260, 560, fill="#59434b", outline="#392d39", width=8)
 		background.create_rectangle(870, 215, 1220, 540, fill="#44384a", outline="")
 		background.create_rectangle(870, 215, 1220, 325, fill="#263653", outline="")
-		background.create_oval(885, 235, 935, 285, fill="#f5e4a6", outline="")
 		background.create_line(870, 325, 1220, 325, fill="#635064", width=4)
 		background.create_rectangle(500, 420, 790, 585, fill="#75495a", outline="#4c3545", width=6)
 		background.create_rectangle(465, 365, 790, 470, fill="#a36c78", outline="#4c3545", width=6)
 		background.create_rectangle(490, 385, 620, 455, fill="#d3a0a2", outline="")
 		background.create_rectangle(720, 365, 790, 585, fill="#55404a", outline="#392d39", width=5)
-		background.create_oval(735, 390, 775, 430, fill="#f2c18f", outline="")
 		background.create_rectangle(80, 485, 390, 535, fill="#765047", outline="#493631", width=5)
 		background.create_rectangle(105, 535, 135, 625, fill="#493631", outline="")
 		background.create_rectangle(335, 535, 365, 625, fill="#493631", outline="")
