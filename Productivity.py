@@ -80,9 +80,14 @@ class ProductivityTimer:
 		)
 		self.task_list = tk.Listbox(tasks_frame, width=44, height=5)
 		self.task_list.pack()
+		task_actions = tk.Frame(tasks_frame, pady=6)
+		task_actions.pack()
 		tk.Button(
-			tasks_frame, text="Remove Selected", command=self.remove_selected_task
-		).pack(pady=(6, 0))
+			task_actions, text="✓", width=3, command=self.toggle_task_complete
+		).pack(side=tk.LEFT, padx=3)
+		tk.Button(
+			task_actions, text="Remove Selected", command=self.remove_selected_task
+		).pack(side=tk.LEFT, padx=3)
 
 		break_frame = tk.Frame(timer_tab, pady=12)
 		break_frame.pack()
@@ -209,19 +214,18 @@ class ProductivityTimer:
 		background.create_rectangle(70, 85, 350, 330, fill="#283c5d", outline="#526887", width=8)
 		background.create_line(210, 90, 210, 325, fill="#526887", width=6)
 		background.create_line(75, 205, 345, 205, fill="#526887", width=6)
-		background.create_oval(115, 125, 155, 165, fill="#f5e4a6", outline="")
+		background.create_oval(
+			115, 125, 155, 165, fill="#f5e4a6", outline="", tags="scene_toggle"
+		)
+		background.tag_bind("scene_toggle", "<Button-1>", lambda event: self.toggle_background())
+		background.tag_bind("scene_toggle", "<Enter>", lambda event: background.configure(cursor="hand2"))
+		background.tag_bind("scene_toggle", "<Leave>", lambda event: background.configure(cursor=""))
 		background.create_oval(260, 105, 268, 113, fill="#f5e4a6", outline="")
 		background.create_oval(300, 150, 308, 158, fill="#f5e4a6", outline="")
 		background.create_oval(105, 250, 113, 258, fill="#f5e4a6", outline="")
 		background.create_rectangle(830, 170, 1260, 560, fill="#59434b", outline="#392d39", width=8)
 		background.create_rectangle(870, 215, 1220, 540, fill="#44384a", outline="")
 		background.create_rectangle(870, 215, 1220, 325, fill="#263653", outline="")
-		background.create_oval(
-			885, 235, 935, 285, fill="#f5e4a6", outline="", tags="scene_toggle"
-		)
-		background.tag_bind("scene_toggle", "<Button-1>", lambda event: self.toggle_background())
-		background.tag_bind("scene_toggle", "<Enter>", lambda event: background.configure(cursor="hand2"))
-		background.tag_bind("scene_toggle", "<Leave>", lambda event: background.configure(cursor=""))
 		background.create_line(870, 325, 1220, 325, fill="#635064", width=4)
 		background.create_rectangle(500, 420, 790, 585, fill="#75495a", outline="#4c3545", width=6)
 		background.create_rectangle(465, 365, 790, 470, fill="#a36c78", outline="#4c3545", width=6)
@@ -305,6 +309,21 @@ class ProductivityTimer:
 		selected_tasks = self.task_list.curselection()
 		for task_index in reversed(selected_tasks):
 			self.task_list.delete(task_index)
+
+	def toggle_task_complete(self):
+		selected_tasks = self.task_list.curselection()
+		if not selected_tasks:
+			return
+
+		task_index = selected_tasks[0]
+		task = self.task_list.get(task_index)
+		if task.startswith("✓ "):
+			task = task[2:]
+		else:
+			task = f"✓ {task}"
+		self.task_list.delete(task_index)
+		self.task_list.insert(task_index, task)
+		self.task_list.selection_set(task_index)
 
 	def toggle_timer(self):
 		if self.timer_running:
