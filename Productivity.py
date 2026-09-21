@@ -23,6 +23,7 @@ class ProductivityTimer:
 		self.break_minutes = tk.StringVar(value="5")
 		self.break_display = tk.StringVar()
 		self.break_status = tk.StringVar(value="Ready for a break")
+		self.task_text = tk.StringVar()
 
 		notebook = ttk.Notebook(root)
 		notebook.pack(fill="both", expand=True)
@@ -63,6 +64,23 @@ class ProductivityTimer:
 		tk.Button(controls, text="Reset", width=10, command=self.reset_timer).pack(
 			side=tk.LEFT, padx=4
 		)
+
+		tasks_frame = tk.Frame(timer_tab, pady=8)
+		tasks_frame.pack()
+		tk.Label(tasks_frame, text="TASKS", font=("Arial", 14, "bold")).pack()
+		task_entry_frame = tk.Frame(tasks_frame, pady=6)
+		task_entry_frame.pack()
+		task_entry = tk.Entry(task_entry_frame, textvariable=self.task_text, width=34)
+		task_entry.pack(side=tk.LEFT, padx=(0, 6))
+		task_entry.bind("<Return>", lambda event: self.add_task())
+		tk.Button(task_entry_frame, text="Add", command=self.add_task).pack(
+			side=tk.LEFT
+		)
+		self.task_list = tk.Listbox(tasks_frame, width=44, height=5)
+		self.task_list.pack()
+		tk.Button(
+			tasks_frame, text="Remove Selected", command=self.remove_selected_task
+		).pack(pady=(6, 0))
 
 		break_frame = tk.Frame(timer_tab, pady=12)
 		break_frame.pack()
@@ -130,6 +148,17 @@ class ProductivityTimer:
 	def update_break_display(self):
 		minutes, seconds = divmod(self.break_remaining_seconds, 60)
 		self.break_display.set(f"{minutes:02d}:{seconds:02d}")
+
+	def add_task(self):
+		task = self.task_text.get().strip()
+		if task:
+			self.task_list.insert(tk.END, task)
+			self.task_text.set("")
+
+	def remove_selected_task(self):
+		selected_tasks = self.task_list.curselection()
+		for task_index in reversed(selected_tasks):
+			self.task_list.delete(task_index)
 
 	def toggle_timer(self):
 		if self.timer_running:
