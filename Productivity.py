@@ -109,5 +109,7 @@ class ProductivityTimer:
 
 if __name__ == "__main__":
 	window = tk.Tk()
+	window.attributes("-fullscreen", True)
+	window.bind("<Escape>", lambda event: window.attributes("-fullscreen", False))
 	ProductivityTimer(window)
 	window.mainloop()
