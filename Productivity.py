@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
+from tkinter import ttk
 
 
 class ProductivityTimer:
@@ -14,6 +15,7 @@ class ProductivityTimer:
 		self.break_remaining_seconds = 5 * 60
 		self.break_timer_running = False
 		self.break_timer_job = None
+		self.session_number = 0
 
 		self.minutes = tk.StringVar(value="25")
 		self.display = tk.StringVar()
@@ -22,30 +24,37 @@ class ProductivityTimer:
 		self.break_display = tk.StringVar()
 		self.break_status = tk.StringVar(value="Ready for a break")
 
+		notebook = ttk.Notebook(root)
+		notebook.pack(fill="both", expand=True)
+		timer_tab = tk.Frame(notebook)
+		history_tab = tk.Frame(notebook)
+		notebook.add(timer_tab, text="Timers")
+		notebook.add(history_tab, text="History")
+
 		tk.Label(
-			root,
+			timer_tab,
 			text="PRODUCTIVITY TIMER",
 			font=("Arial", 16, "bold"),
 			pady=12,
 		).pack()
 
 		tk.Label(
-			root,
+			timer_tab,
 			textvariable=self.display,
 			font=("Arial", 48, "bold"),
 			width=5,
 		).pack(pady=8)
 
-		tk.Label(root, textvariable=self.status, font=("Arial", 11)).pack()
+		tk.Label(timer_tab, textvariable=self.status, font=("Arial", 11)).pack()
 
-		settings = tk.Frame(root, pady=12)
+		settings = tk.Frame(timer_tab, pady=12)
 		settings.pack()
 		tk.Label(settings, text="Minutes:").pack(side=tk.LEFT, padx=(0, 6))
 		tk.Entry(settings, textvariable=self.minutes, width=5, justify="center").pack(
 			side=tk.LEFT
 		)
 
-		controls = tk.Frame(root, pady=8)
+		controls = tk.Frame(timer_tab, pady=8)
 		controls.pack()
 		self.start_button = tk.Button(
 			controls, text="Start", width=10, command=self.toggle_timer
@@ -55,7 +64,7 @@ class ProductivityTimer:
 			side=tk.LEFT, padx=4
 		)
 
-		break_frame = tk.Frame(root, pady=12)
+		break_frame = tk.Frame(timer_tab, pady=12)
 		break_frame.pack()
 		tk.Label(
 			break_frame,
@@ -86,6 +95,30 @@ class ProductivityTimer:
 		tk.Button(
 			break_controls, text="Reset Break", width=10, command=self.reset_break_timer
 		).pack(side=tk.LEFT, padx=4)
+
+		tk.Label(
+			history_tab, text="COMPLETED SESSIONS", font=("Arial", 14, "bold")
+		).pack(pady=(16, 8))
+		history_frame = tk.Frame(history_tab)
+		history_frame.pack(padx=16, pady=4)
+		self.history = ttk.Treeview(
+			history_frame,
+			columns=("session", "type", "duration", "status"),
+			show="headings",
+			height=12,
+		)
+		self.history.heading("session", text="#")
+		self.history.heading("type", text="Type")
+		self.history.heading("duration", text="Duration")
+		self.history.heading("status", text="Status")
+		self.history.column("session", width=45, anchor="center")
+		self.history.column("type", width=100, anchor="center")
+		self.history.column("duration", width=100, anchor="center")
+		self.history.column("status", width=100, anchor="center")
+		self.history.pack()
+		tk.Button(
+			history_tab, text="Clear History", command=self.clear_history
+		).pack(pady=12)
 
 		self.update_display()
 		self.update_break_display()
@@ -136,6 +169,19 @@ class ProductivityTimer:
 		self.status.set("Ready to focus")
 		self.update_display()
 
+	def add_history_entry(self, timer_type, duration_minutes):
+		self.session_number += 1
+		self.history.insert(
+			"",
+			"end",
+			values=(self.session_number, timer_type, f"{duration_minutes} min", "Completed"),
+		)
+
+	def clear_history(self):
+		for item in self.history.get_children():
+			self.history.delete(item)
+		self.session_number = 0
+
 	def toggle_break_timer(self):
 		if self.break_timer_running:
 			self.pause_break_timer()
@@ -180,6 +226,7 @@ class ProductivityTimer:
 			self.timer_running = False
 			self.start_button.config(text="Start")
 			self.status.set("Time is up!")
+			self.add_history_entry("Focus", self.minutes.get())
 			self.root.bell()
 			messagebox.showinfo("Timer complete", "Great work. Time for a break!")
 			return
@@ -193,6 +240,7 @@ class ProductivityTimer:
 			self.break_timer_running = False
 			self.break_start_button.config(text="Start Break")
 			self.break_status.set("Break is over")
+			self.add_history_entry("Break", self.break_minutes.get())
 			self.root.bell()
 			messagebox.showinfo("Break complete", "Break is over. Ready to focus?")
 			return
