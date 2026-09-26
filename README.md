@@ -14,3 +14,4 @@ Made with AI: This is a pomodoro style timer to help with productivity, and mana
 - History tab to see what one has has already done
 - Two central timers to track how long you've been working
 
+![Home page for productivity.py](Images/ProductivityHomepage.png)
