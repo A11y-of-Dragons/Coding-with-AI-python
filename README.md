@@ -1,4 +1,4 @@
-# Productivity application in python
+# Productivity application made in python
 Made with AI: This is a pomodoro style timer to help with productivity, and managing ones time well, without overdoing it. 
 
 ## Technologies/Languages used: 
