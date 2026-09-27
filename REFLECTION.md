@@ -7,7 +7,8 @@ Copilot helped me build a productivity application because I have always liked t
  At first, my questions were based on how the code worked,  and instructions based on what I was trying to make as seen below. 
 ![Background of the app](Images/background_of_app.png)
 at one point though there was as piece of code I had the AI add in and the code made it so that I could click on the file to open the app, but the application would open as a brief black page and then close itself out with no other reasoning. 
-![Code isn't working](Images/Wrong_code.png)
+![Code isn't working](Images/Wrong_Code.png)
+
 After some time going back and forth, there was an incorectly called method in the code:
 ![issue found](Images/Ghost_call.png)
 After I fixed this, it then changed how I approached asking AI to do things so that it would check the lines of code that it put in *before* I would try to run the file (I would double check just to make sure though). 
